@@ -23,6 +23,7 @@ import java.util.List;
 public abstract class Critter {
 	private static String myPackage;
 	private	static List<Critter> population = new java.util.ArrayList<Critter>();
+	private static List<Critter> Moved = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
 
 	// Gets the package name.  This assumes that Critter and its subclasses are all in the same package.
@@ -49,157 +50,165 @@ public abstract class Critter {
 	private int y_coord;
 	
 	protected final void walk(int direction) {
-		switch(direction){
-			case 0:
-				x_coord++;
-				if(x_coord >= Params.world_width + 1){
-					x_coord -= Params.world_width;
-				}
-				energy -= Params.walk_energy_cost;
-				break;
-			case 1:
-				x_coord++;
-				y_coord--;
-				if(x_coord >= Params.world_width + 1){
-					x_coord -= Params.world_width;
-				}
-				if(y_coord <= 0){
-					y_coord += Params.world_height;
-				}
-				energy -= Params.walk_energy_cost;
-				break;
-			case 2:
-				y_coord++;
-				if(y_coord <= 0){
-					y_coord += Params.world_height;
-				}
-				energy -= Params.walk_energy_cost;
-				break;
-			case 3:
-				x_coord--;
-				y_coord--;
-				if(x_coord <= 0){
-					x_coord += Params.world_width;
-				}
-				if(y_coord <= 0){
-					y_coord += Params.world_height;
-				}
-				energy -= Params.walk_energy_cost;
-				break;
-			case 4:
-				x_coord--;
-				if(x_coord <= 0){
-					x_coord += Params.world_width;
-				}
-				energy -= Params.walk_energy_cost;
-				break;
-			case 5:
-				x_coord--;
-				y_coord++;
-				if(x_coord <= 0){
-					x_coord += Params.world_width;
-				}
-				if(y_coord <= Params.world_height + 1){
-					y_coord -= Params.world_height;
-				}
-				energy -= Params.walk_energy_cost;
-				break;
-			case 6:
-				y_coord++;
-				if(y_coord <= Params.world_height + 1){
-					y_coord -= Params.world_height;
-				}
-				energy -= Params.walk_energy_cost;
-				break;
-			case 7:
-				x_coord++;
-				y_coord++;
-				if(x_coord >= Params.world_width + 1){
-					x_coord -= Params.world_width;
-				}
-				if(y_coord <= Params.world_height + 1){
-					y_coord -= Params.world_height;
-				}
-				energy -= Params.walk_energy_cost;
-				break;
+		boolean move = Moved.contains(this);
+		if(!move){
+			switch(direction){
+				case 0:
+					x_coord++;
+					if(x_coord >= Params.world_width + 1){
+						x_coord -= Params.world_width;
+					}
+					Moved.add(this);
+					break;
+				case 1:
+					x_coord++;
+					y_coord--;
+					if(x_coord >= Params.world_width + 1){
+						x_coord -= Params.world_width;
+					}
+					if(y_coord <= 0){
+						y_coord += Params.world_height;
+					}
+					Moved.add(this);
+					break;
+				case 2:
+					y_coord++;
+					if(y_coord <= 0){
+						y_coord += Params.world_height;
+					}
+					Moved.add(this);
+					break;
+				case 3:
+					x_coord--;
+					y_coord--;
+					if(x_coord <= 0){
+						x_coord += Params.world_width;
+					}
+					if(y_coord <= 0){
+						y_coord += Params.world_height;
+					}
+					Moved.add(this);
+					break;
+				case 4:
+					x_coord--;
+					if(x_coord <= 0){
+						x_coord += Params.world_width;
+					}
+					Moved.add(this);
+					break;
+				case 5:
+					x_coord--;
+					y_coord++;
+					if(x_coord <= 0){
+						x_coord += Params.world_width;
+					}
+					if(y_coord <= Params.world_height + 1){
+						y_coord -= Params.world_height;
+					}
+					Moved.add(this);
+					break;
+				case 6:
+					y_coord++;
+					if(y_coord <= Params.world_height + 1){
+						y_coord -= Params.world_height;
+					}
+					Moved.add(this);
+					break;
+				case 7:
+					x_coord++;
+					y_coord++;
+					if(x_coord >= Params.world_width + 1){
+						x_coord -= Params.world_width;
+					}
+					if(y_coord <= Params.world_height + 1){
+						y_coord -= Params.world_height;
+					}
+					Moved.add(this);
+					break;
+			}	
 		}
+		energy -= Params.walk_energy_cost;
 	}
 	
 	protected final void run(int direction) {
-		switch(direction){
-			case 0:
-				x_coord+=2;
-				if(x_coord >= Params.world_width + 1){
-					x_coord -= Params.world_width;
-				}
-				energy -= Params.run_energy_cost;
-				break;
-			case 1:
-				x_coord+=2;
-				y_coord-=2;
-				if(x_coord >= Params.world_width + 1){
-					x_coord -= Params.world_width;
-				}
-				if(y_coord <= 0){
-					y_coord += Params.world_height;
-				}
-				energy -= Params.run_energy_cost;
-				break;
-			case 2:
-				y_coord+=2;
-				if(y_coord <= 0){
-					y_coord += Params.world_height;
-				}
-				energy -= Params.run_energy_cost;
-				break;
-			case 3:
-				x_coord-=2;
-				y_coord-=2;
-				if(x_coord <= 0){
-					x_coord += Params.world_width;
-				}
-				if(y_coord <= 0){
-					y_coord += Params.world_height;
-				}
-				energy -= Params.run_energy_cost;
-				break;
-			case 4:
-				x_coord-=2;
-				if(x_coord <= 0){
-					x_coord += Params.world_width;
-				}
-				energy -= Params.run_energy_cost;
-				break;
-			case 5:
-				x_coord-=2;
-				y_coord+=2;
-				if(x_coord <= 0){
-					x_coord += Params.world_width;
-				}
-				if(y_coord <= Params.world_height + 1){
-					y_coord -= Params.world_height;
-				}
-				energy -= Params.run_energy_cost;
-				break;
-			case 6:
-				y_coord+=2;
-				if(y_coord <= Params.world_height + 1){
-					y_coord -= Params.world_height;
-				}
-				energy -= Params.run_energy_cost;
-				break;
-			case 7:
-				x_coord+=2;
-				y_coord+=2;
-				if(x_coord >= Params.world_width + 1){
-					x_coord -= Params.world_width;
-				}
-				if(y_coord <= Params.world_height + 1){
-					y_coord -= Params.world_height;
-				}
-				energy -= Params.run_energy_cost;
-				break;
+		boolean move = Moved.contains(this);
+		if(!move){
+			switch(direction){
+				case 0:
+					x_coord+=2;
+					if(x_coord >= Params.world_width + 1){
+						x_coord -= Params.world_width;
+					}
+					Moved.add(this);
+					break;
+				case 1:
+					x_coord+=2;
+					y_coord-=2;
+					if(x_coord >= Params.world_width + 1){
+						x_coord -= Params.world_width;
+					}
+					if(y_coord <= 0){
+						y_coord += Params.world_height;
+					}
+					Moved.add(this);
+					break;
+				case 2:
+					y_coord+=2;
+					if(y_coord <= 0){
+						y_coord += Params.world_height;
+					}
+					Moved.add(this);
+					break;
+				case 3:
+					x_coord-=2;
+					y_coord-=2;
+					if(x_coord <= 0){
+						x_coord += Params.world_width;
+					}
+					if(y_coord <= 0){
+						y_coord += Params.world_height;
+					}
+					Moved.add(this);
+					break;
+				case 4:
+					x_coord-=2;
+					if(x_coord <= 0){
+						x_coord += Params.world_width;
+					}
+					Moved.add(this);
+					break;
+				case 5:
+					x_coord-=2;
+					y_coord+=2;
+					if(x_coord <= 0){
+						x_coord += Params.world_width;
+					}
+					if(y_coord <= Params.world_height + 1){
+						y_coord -= Params.world_height;
+					}
+					Moved.add(this);
+					break;
+				case 6:
+					y_coord+=2;
+					if(y_coord <= Params.world_height + 1){
+						y_coord -= Params.world_height;
+					}
+					Moved.add(this);
+					break;
+				case 7:
+					x_coord+=2;
+					y_coord+=2;
+					if(x_coord >= Params.world_width + 1){
+						x_coord -= Params.world_width;
+					}
+					if(y_coord <= Params.world_height + 1){
+						y_coord -= Params.world_height;
+					}
+					Moved.add(this);
+					break;
+			}
 		}
+		energy -= Params.run_energy_cost;
 	}
 	
 	protected final void reproduce(Critter offspring, int direction) {
