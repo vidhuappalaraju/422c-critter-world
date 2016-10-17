@@ -438,6 +438,7 @@ public abstract class Critter {
 			if(C.getEnergy() <= 0)
 				population.remove(C);
 		}	
+		Moved.clear();
 	}
 	
 	public static void displayWorld() {
