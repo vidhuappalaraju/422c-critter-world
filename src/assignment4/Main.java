@@ -11,6 +11,7 @@
  * Fall 2016
  */
 package assignment4; // cannot be in default package
+import java.util.List;
 import java.util.Scanner;
 import java.io.*;
 
@@ -70,6 +71,83 @@ public class Main {
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
         
+    	 boolean process = true;
+         while(process){
+        String word = kb.next();
+        int step;
+       //String cut = word.substring(0,5);
+        if(word.equals("quit")){
+     	   System.exit(0);
+        }
+        else if(word.equals("show")){
+     	   Critter.displayWorld();
+        }
+        else if(word.equals("step")){
+     	   if(kb.hasNextInt()){
+     		   step = kb.nextInt();
+     	   }
+     	   else{
+     		    step = 1;
+     	   }
+        }
+        else if(word.equals("seed")){
+     	   if(kb.hasNextInt()){
+     		   int seed = kb.nextInt();
+     		   Critter.setSeed(seed);
+     	   }
+        }
+        else if(word.equals("make")){
+     	   if(kb.hasNext()){
+     		   String class_name = kb.next();
+     		   if(kb.hasNextInt()){
+     			    step = kb.nextInt();
+     		   }
+     		   else{
+     			    step = 1;
+     		   }
+     		  while(step > 0){ 
+     		   try{
+     		   Critter.makeCritter(class_name);
+     		   }
+     		   catch(InvalidCritterException e){
+     			   e.printStackTrace();
+     		   }
+     		   step--;
+     		  }
+     	   }
+        }
+        else if(word.equals("stats")){
+     	   if(kb.hasNext()){
+     		   String class_name = kb.next();
+     		   try 
+     		   {
+     				List<Critter> result = new java.util.ArrayList<Critter>();
+     			   result = Critter.getInstances(class_name);
+     			 
+     	    		   @SuppressWarnings("unchecked")
+ 					Class<Critter> C = (Class<Critter>)Class.forName(class_name);
+     	    		   Critter Crit = (Critter) C.newInstance();
+     	    		   if(!(Crit instanceof Critter)) throw new InvalidCritterException(class_name);
+     	    		   
+     	    		   
+     		   }
+     		   catch(InvalidCritterException e){
+     			   e.printStackTrace();
+     		   } catch (InstantiationException e) {
+ 				// TODO Auto-generated catch block
+ 				e.printStackTrace();
+ 			} catch (IllegalAccessException e) {
+ 				// TODO Auto-generated catch block
+ 				e.printStackTrace();
+ 			} catch (ClassNotFoundException e) {
+ 				// TODO Auto-generated catch block
+ 				e.printStackTrace();
+ 			}
+     
+     		  
+     	   }
+        }
+      }
         //System.out.println("GLHF");
         
         /* Write your code above */
