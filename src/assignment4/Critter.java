@@ -252,23 +252,19 @@ public abstract class Critter {
 	 * @param critter_class_name
 	 * @throws InvalidCritterException
 	 */
-	@SuppressWarnings("unchecked")
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
+		Critter C;
 		try{
-				Class<Critter> C = (Class<Critter>)Class.forName(critter_class_name);
-				Critter Crit = (Critter) C.newInstance();
-				if(!(Crit instanceof Critter)) throw new InvalidCritterException(critter_class_name);
-				Crit.x_coord = Critter.getRandomInt(Params.world_width);
-				Crit.y_coord = Critter.getRandomInt(Params.world_height);
-				Crit.energy = Params.start_energy;
-				population.add(Crit);
-		}
-		catch(InvalidCritterException e){
-			e.toString();
+			Class<?> Crit = Class.forName(Critter.myPackage + "." + critter_class_name);
+			C = (Critter)(Crit.newInstance());
 		}
 		catch(Exception e){
-			e.toString();
+			throw new InvalidCritterException(critter_class_name);
 		}
+		C.x_coord = Critter.getRandomInt(Params.world_width);
+		C.y_coord = Critter.getRandomInt(Params.world_height);
+		C.energy = Params.start_energy;
+		population.add(C);
 	}
 	
 	/**
@@ -277,31 +273,25 @@ public abstract class Critter {
 	 * @return List of Critters.
 	 * @throws InvalidCritterException
 	 */
-	@SuppressWarnings("unchecked")
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
-		
 		List<Critter> result = new java.util.ArrayList<Critter>();
-		try{
-			Class<Critter> D = (Class<Critter>)Class.forName(critter_class_name);
-			Critter Crit = (Critter) D.newInstance();
-			if(!(Crit instanceof Critter))
-				throw new InvalidCritterException(critter_class_name);
-			D.isInstance(critter_class_name);
-			for(Critter C: population){
-				if(D.equals(C.getClass())){
-					result.add(C);
-				}
-			}
-			
-		}
-		catch(InvalidCritterException e){
-			e.toString();
-		}
-		catch(Exception e){
-			e.toString();
-		}
-		return result;
-	}
+        Class<?> critter, critterclass;
+        try{
+            critterclass = Class.forName(myPackage + ".Critter");
+            critter = Class.forName(myPackage + "." + critter_class_name);
+            if(!critterclass.isAssignableFrom(critter)){
+                throw new InvalidCritterException(critter_class_name);
+            }
+        }catch(ClassNotFoundException e){
+            throw new InvalidCritterException(critter_class_name);
+        }
+        for(int i = 0; i < population.size(); i++){
+            if(critter.isInstance(population.get(i))){
+                result.add(population.get(i));
+            }
+        }
+        return result;
+    }
 	
 	/**
 	 * Prints out how many Critters of each type there are on the board.
