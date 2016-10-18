@@ -25,6 +25,7 @@ public abstract class Critter {
 	private	static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> Moved = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
+	private static boolean AllMove;
 
 	// Gets the package name.  This assumes that Critter and its subclasses are all in the same package.
 	static {
@@ -50,33 +51,33 @@ public abstract class Critter {
 	private int y_coord;
 	
 	protected final void walk(int direction) {
+		this.energy -= Params.walk_energy_cost;
 		boolean move = Moved.contains(this);
+		int oldX = this.x_coord;
+		int oldY = this.y_coord;
 		if(!move){
 			switch(direction){
 				case 0:
 					x_coord++;
-					if(x_coord >= Params.world_width + 1){
+					if(x_coord >= Params.world_width){
 						x_coord -= Params.world_width;
 					}
-					Moved.add(this);
 					break;
 				case 1:
 					x_coord++;
 					y_coord--;
-					if(x_coord >= Params.world_width + 1){
+					if(x_coord >= Params.world_width){
 						x_coord -= Params.world_width;
 					}
 					if(y_coord <= 0){
 						y_coord += Params.world_height;
 					}
-					Moved.add(this);
 					break;
 				case 2:
 					y_coord++;
 					if(y_coord <= 0){
 						y_coord += Params.world_height;
 					}
-					Moved.add(this);
 					break;
 				case 3:
 					x_coord--;
@@ -87,14 +88,12 @@ public abstract class Critter {
 					if(y_coord <= 0){
 						y_coord += Params.world_height;
 					}
-					Moved.add(this);
 					break;
 				case 4:
 					x_coord--;
 					if(x_coord <= 0){
 						x_coord += Params.world_width;
 					}
-					Moved.add(this);
 					break;
 				case 5:
 					x_coord--;
@@ -102,62 +101,68 @@ public abstract class Critter {
 					if(x_coord <= 0){
 						x_coord += Params.world_width;
 					}
-					if(y_coord <= Params.world_height + 1){
+					if(y_coord <= Params.world_height){
 						y_coord -= Params.world_height;
 					}
-					Moved.add(this);
 					break;
 				case 6:
 					y_coord++;
-					if(y_coord <= Params.world_height + 1){
+					if(y_coord <= Params.world_height){
 						y_coord -= Params.world_height;
 					}
-					Moved.add(this);
 					break;
 				case 7:
 					x_coord++;
 					y_coord++;
-					if(x_coord >= Params.world_width + 1){
+					if(x_coord >= Params.world_width){
 						x_coord -= Params.world_width;
 					}
-					if(y_coord <= Params.world_height + 1){
+					if(y_coord <= Params.world_height){
 						y_coord -= Params.world_height;
 					}
-					Moved.add(this);
 					break;
 			}	
+			Moved.add(this);
+			if(AllMove){
+				for(Critter C: population){
+					if(!(population.indexOf(this) == population.indexOf(C)) && this.x_coord == C.x_coord && this.y_coord == C.y_coord && C.energy > 0){
+						this.x_coord = oldX;
+						this.y_coord = oldY;
+						break;
+					}
+				}
+			}
 		}
-		energy -= Params.walk_energy_cost;
 	}
 	
 	protected final void run(int direction) {
+		energy -= Params.run_energy_cost;
 		boolean move = Moved.contains(this);
+		int oldX = this.x_coord;
+		int oldY = this.y_coord;
 		if(!move){
 			switch(direction){
 				case 0:
 					x_coord+=2;
-					if(x_coord >= Params.world_width + 1){
+					if(x_coord >= Params.world_width){
 						x_coord -= Params.world_width;
 					}
-					Moved.add(this);
 					break;
 				case 1:
 					x_coord+=2;
 					y_coord-=2;
-					if(x_coord >= Params.world_width + 1){
+					if(x_coord >= Params.world_width){
 						x_coord -= Params.world_width;
 					}
 					if(y_coord <= 0){
 						y_coord += Params.world_height;
 					}
-					Moved.add(this);
 					break;
 				case 2:
 					y_coord+=2;
 					if(y_coord <= 0){
 						y_coord += Params.world_height;
 					}
-					Moved.add(this);
 					break;
 				case 3:
 					x_coord-=2;
@@ -168,14 +173,12 @@ public abstract class Critter {
 					if(y_coord <= 0){
 						y_coord += Params.world_height;
 					}
-					Moved.add(this);
 					break;
 				case 4:
 					x_coord-=2;
 					if(x_coord <= 0){
 						x_coord += Params.world_width;
 					}
-					Moved.add(this);
 					break;
 				case 5:
 					x_coord-=2;
@@ -183,32 +186,38 @@ public abstract class Critter {
 					if(x_coord <= 0){
 						x_coord += Params.world_width;
 					}
-					if(y_coord <= Params.world_height + 1){
+					if(y_coord <= Params.world_height){
 						y_coord -= Params.world_height;
 					}
-					Moved.add(this);
 					break;
 				case 6:
 					y_coord+=2;
-					if(y_coord <= Params.world_height + 1){
+					if(y_coord <= Params.world_height){
 						y_coord -= Params.world_height;
 					}
-					Moved.add(this);
 					break;
 				case 7:
 					x_coord+=2;
 					y_coord+=2;
-					if(x_coord >= Params.world_width + 1){
+					if(x_coord >= Params.world_width){
 						x_coord -= Params.world_width;
 					}
-					if(y_coord <= Params.world_height + 1){
+					if(y_coord <= Params.world_height){
 						y_coord -= Params.world_height;
 					}
-					Moved.add(this);
 					break;
 			}
+			Moved.add(this);
+			if(AllMove){
+				for(Critter C: population){
+					if(!(population.indexOf(this) == population.indexOf(C)) && this.x_coord == C.x_coord && this.y_coord == C.y_coord && C.energy > 0){
+						this.x_coord = oldX;
+						this.y_coord = oldY;
+						break;
+					}
+				}
+			}
 		}
-		energy -= Params.run_energy_cost;
 	}
 	
 	protected final void reproduce(Critter offspring, int direction) {
@@ -378,10 +387,12 @@ public abstract class Critter {
 	}
 	
 	
-	public static void worldTimeStep() {														
+	public static void worldTimeStep() {	
+		AllMove = false;
 		for(Critter C : population){														//initiate all doTimeStep functions
 			C.doTimeStep();
 		}
+		AllMove = true;
 		for(Critter C: population){															//kill off whoever died from that
 			if(C.getEnergy() <= 0)
 				population.remove(C);
