@@ -13,7 +13,9 @@
 package assignment4; // cannot be in default package
 import java.util.List;
 import java.util.Scanner;
+import java.util.*;
 import java.io.*;
+import java.lang.reflect.Method;
 
 
 /*
@@ -41,9 +43,9 @@ public class Main {
      * @param args args can be empty.  If not empty, provide two parameters -- the first is a file name, 
      * and the second is test (for test output, where all output to be directed to a String), or nothing.
      */
-    public static void main(String[] args) { 
-    	Critter.displayWorld();
-        /*if (args.length != 0) {
+    
+	public static void main(String[] args) { 
+        if (args.length != 0) {
             try {
                 inputFile = args[0];
                 kb = new Scanner(new File(inputFile));			
@@ -69,89 +71,97 @@ public class Main {
         }
 
         /* Do not alter the code above for your submission. */
-        /* Write your code below. */
         
-    	 boolean process = true;
-         while(process){
-        String word = kb.next();
-        int step;
-       //String cut = word.substring(0,5);
-        if(word.equals("quit")){
-     	   System.exit(0);
+        
+        /* Write your code below. */
+        while(kb.hasNext()){
+        	 String line = kb.nextLine();
+        	
+        	
+        	String[] word = line.split("\\s+");
+        try{
+        	switch(word[0]){
+        	case "quit":
+        		if(word.length == 1)
+        		System.exit(0);
+        		else{
+        			throw new Exception();
+        		}
+        		break;
+        	case "show":
+        		if(word.length == 1)
+        		 Critter.displayWorld();
+        		else{
+        			throw new Exception();
+        		}
+        		 break;
+        	case "step":
+        		if(word.length == 1){
+        			Critter.worldTimeStep();
+        			
+        		}
+        		else if(word.length == 2){
+        			int step = Integer.parseInt(word[1]);
+        			if(step <= 0){
+        				throw new Exception();
+        			}
+        			for(int j = step; j > 0; j--){
+            			Critter.worldTimeStep();
+            		}
+        		}
+        		else{
+        			throw new Exception();
+        		}
+        		break;
+        	case "seed":
+        		if(word.length == 1){
+        			Critter.setSeed(Integer.parseInt(word[1]));
+        		}
+        		else{
+        			throw new Exception();
+        		}
+        		break;
+        	case "make":
+        		if(word.length == 2){
+        			String class_name = word[1];
+        			Critter.makeCritter(class_name);
+        		}
+        		else if(word.length == 3){
+        			String class_name = word[1];
+        			int count = Integer.parseInt(word[2]);
+        			if(count == 0){
+        				throw new Exception();
+        			}
+        			for(int i = count; i > 0; i--){
+        				Critter.makeCritter(class_name);
+        			}
+        		}
+        		else{
+        			throw new Exception();
+        		}
+        		break;
+        	case "stats":
+        		if(word.length == 2){
+        			Class<?> critters = Class.forName(myPackage + "." + word[1]);
+        			Method meth = critters.getMethod("runStats", List.class);
+        			meth.invoke(null, Critter.getInstances(word[1]));
+        		}
+        		else{
+        			throw new Exception();
+        		}
+        	default:
+        		System.out.println("error processing: " + line);
+        	}
         }
-        else if(word.equals("show")){
-     	   Critter.displayWorld();
+        catch(Exception e){
+        	System.out.println("invalid command: " + line);
         }
-        else if(word.equals("step")){
-     	   if(kb.hasNextInt()){
-     		   step = kb.nextInt();
-     	   }
-     	   else{
-     		    step = 1;
-     	   }
-        }
-        else if(word.equals("seed")){
-     	   if(kb.hasNextInt()){
-     		   int seed = kb.nextInt();
-     		   Critter.setSeed(seed);
-     	   }
-        }
-        else if(word.equals("make")){
-     	   if(kb.hasNext()){
-     		   String class_name = kb.next();
-     		   if(kb.hasNextInt()){
-     			    step = kb.nextInt();
-     		   }
-     		   else{
-     			    step = 1;
-     		   }
-     		  while(step > 0){ 
-     		   try{
-     		   Critter.makeCritter(class_name);
-     		   }
-     		   catch(InvalidCritterException e){
-     			   e.printStackTrace();
-     		   }
-     		   step--;
-     		  }
-     	   }
-        }
-        else if(word.equals("stats")){
-     	   if(kb.hasNext()){
-     		   String class_name = kb.next();
-     		   try 
-     		   {
-     				List<Critter> result = new java.util.ArrayList<Critter>();
-     			   result = Critter.getInstances(class_name);
-     			 
-     	    		   @SuppressWarnings("unchecked")
- 					Class<Critter> C = (Class<Critter>)Class.forName(class_name);
-     	    		   Critter Crit = (Critter) C.newInstance();
-     	    		   if(!(Crit instanceof Critter)) throw new InvalidCritterException(class_name);
-     	    		   
-     	    		   
-     		   }
-     		   catch(InvalidCritterException e){
-     			   e.printStackTrace();
-     		   } catch (InstantiationException e) {
- 				// TODO Auto-generated catch block
- 				e.printStackTrace();
- 			} catch (IllegalAccessException e) {
- 				// TODO Auto-generated catch block
- 				e.printStackTrace();
- 			} catch (ClassNotFoundException e) {
- 				// TODO Auto-generated catch block
- 				e.printStackTrace();
- 			}
-     
-     		  
-     	   }
-        }
-      }
-        //System.out.println("GLHF");
+       }
+       
+        System.out.println("GLHF");
         
         /* Write your code above */
-        //System.out.flush();
+        System.out.flush();
 
     }
 }
