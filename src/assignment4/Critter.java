@@ -69,45 +69,45 @@ public abstract class Critter {
 					if(x_coord >= Params.world_width){
 						x_coord -= Params.world_width;
 					}
-					if(y_coord <= 0){
+					if(y_coord < 0){
 						y_coord += Params.world_height;
 					}
 					break;
 				case 2:
-					y_coord++;
-					if(y_coord <= 0){
+					y_coord--;
+					if(y_coord < 0){
 						y_coord += Params.world_height;
 					}
 					break;
 				case 3:
 					x_coord--;
 					y_coord--;
-					if(x_coord <= 0){
+					if(x_coord < 0){
 						x_coord += Params.world_width;
 					}
-					if(y_coord <= 0){
+					if(y_coord < 0){
 						y_coord += Params.world_height;
 					}
 					break;
 				case 4:
 					x_coord--;
-					if(x_coord <= 0){
+					if(x_coord < 0){
 						x_coord += Params.world_width;
 					}
 					break;
 				case 5:
 					x_coord--;
 					y_coord++;
-					if(x_coord <= 0){
+					if(x_coord < 0){
 						x_coord += Params.world_width;
 					}
-					if(y_coord <= Params.world_height){
+					if(y_coord >= Params.world_height){
 						y_coord -= Params.world_height;
 					}
 					break;
 				case 6:
 					y_coord++;
-					if(y_coord <= Params.world_height){
+					if(y_coord >= Params.world_height){
 						y_coord -= Params.world_height;
 					}
 					break;
@@ -117,7 +117,7 @@ public abstract class Critter {
 					if(x_coord >= Params.world_width){
 						x_coord -= Params.world_width;
 					}
-					if(y_coord <= Params.world_height){
+					if(y_coord >= Params.world_height){
 						y_coord -= Params.world_height;
 					}
 					break;
@@ -154,45 +154,45 @@ public abstract class Critter {
 					if(x_coord >= Params.world_width){
 						x_coord -= Params.world_width;
 					}
-					if(y_coord <= 0){
+					if(y_coord < 0){
 						y_coord += Params.world_height;
 					}
 					break;
 				case 2:
 					y_coord+=2;
-					if(y_coord <= 0){
+					if(y_coord < 0){
 						y_coord += Params.world_height;
 					}
 					break;
 				case 3:
 					x_coord-=2;
 					y_coord-=2;
-					if(x_coord <= 0){
+					if(x_coord < 0){
 						x_coord += Params.world_width;
 					}
-					if(y_coord <= 0){
+					if(y_coord < 0){
 						y_coord += Params.world_height;
 					}
 					break;
 				case 4:
 					x_coord-=2;
-					if(x_coord <= 0){
+					if(x_coord < 0){
 						x_coord += Params.world_width;
 					}
 					break;
 				case 5:
 					x_coord-=2;
 					y_coord+=2;
-					if(x_coord <= 0){
+					if(x_coord < 0){
 						x_coord += Params.world_width;
 					}
-					if(y_coord <= Params.world_height){
+					if(y_coord >= Params.world_height){
 						y_coord -= Params.world_height;
 					}
 					break;
 				case 6:
 					y_coord+=2;
-					if(y_coord <= Params.world_height){
+					if(y_coord >= Params.world_height){
 						y_coord -= Params.world_height;
 					}
 					break;
@@ -202,7 +202,7 @@ public abstract class Critter {
 					if(x_coord >= Params.world_width){
 						x_coord -= Params.world_width;
 					}
-					if(y_coord <= Params.world_height){
+					if(y_coord >= Params.world_height){
 						y_coord -= Params.world_height;
 					}
 					break;
