@@ -22,6 +22,7 @@ import java.util.List;
 
 public abstract class Critter {
 	private static String myPackage;
+	private static  String [][]worldMatrix = new String[Params.world_height][Params.world_width];
 	private	static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> Moved = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
@@ -252,23 +253,19 @@ public abstract class Critter {
 	 * @param critter_class_name
 	 * @throws InvalidCritterException
 	 */
-	@SuppressWarnings("unchecked")
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
+		Critter C;
 		try{
-				Class<Critter> C = (Class<Critter>)Class.forName(critter_class_name);
-				Critter Crit = (Critter) C.newInstance();
-				if(!(Crit instanceof Critter)) throw new InvalidCritterException(critter_class_name);
-				Crit.x_coord = Critter.getRandomInt(Params.world_width);
-				Crit.y_coord = Critter.getRandomInt(Params.world_height);
-				Crit.energy = Params.start_energy;
-				population.add(Crit);
-		}
-		catch(InvalidCritterException e){
-			e.toString();
+			Class<?> Crit = Class.forName(Critter.myPackage + "." + critter_class_name);
+			C = (Critter)(Crit.newInstance());
 		}
 		catch(Exception e){
-			e.toString();
+			throw new InvalidCritterException(critter_class_name);
 		}
+		C.x_coord = Critter.getRandomInt(Params.world_width);
+		C.y_coord = Critter.getRandomInt(Params.world_height);
+		C.energy = Params.start_energy;
+		population.add(C);
 	}
 	
 	/**
@@ -277,31 +274,25 @@ public abstract class Critter {
 	 * @return List of Critters.
 	 * @throws InvalidCritterException
 	 */
-	@SuppressWarnings("unchecked")
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
-		
 		List<Critter> result = new java.util.ArrayList<Critter>();
-		try{
-			Class<Critter> D = (Class<Critter>)Class.forName(critter_class_name);
-			Critter Crit = (Critter) D.newInstance();
-			if(!(Crit instanceof Critter))
-				throw new InvalidCritterException(critter_class_name);
-			D.isInstance(critter_class_name);
-			for(Critter C: population){
-				if(D.equals(C.getClass())){
-					result.add(C);
-				}
-			}
-			
-		}
-		catch(InvalidCritterException e){
-			e.toString();
-		}
-		catch(Exception e){
-			e.toString();
-		}
-		return result;
-	}
+        Class<?> critter, critterclass;
+        try{
+            critterclass = Class.forName(myPackage + ".Critter");
+            critter = Class.forName(myPackage + "." + critter_class_name);
+            if(!critterclass.isAssignableFrom(critter)){
+                throw new InvalidCritterException(critter_class_name);
+            }
+        }catch(ClassNotFoundException e){
+            throw new InvalidCritterException(critter_class_name);
+        }
+        for(int i = 0; i < population.size(); i++){
+            if(critter.isInstance(population.get(i))){
+                result.add(population.get(i));
+            }
+        }
+        return result;
+    }
 	
 	/**
 	 * Prints out how many Critters of each type there are on the board.
@@ -372,7 +363,7 @@ public abstract class Critter {
 		 * This method getBabies has to be modified by you if you are not using the babies
 		 * ArrayList that has been provided in the starter code.  In any case, it has to be
 		 * implemented for grading tests to work.  Babies should be added to the general population 
-		 * at either the beginning OR the end of every timestep.
+		 * at either the beginning OR the end of every time step.
 		 */
 		protected static List<Critter> getBabies() {
 			return babies;
@@ -450,51 +441,60 @@ public abstract class Critter {
 				population.remove(C);
 		}	
 		Moved.clear();
+		updateWorld();
 	}
-	
+	public static void updateWorld(){
+		for(int i = 0; i < Params.world_height; i++){
+			for (int j = 0; j < Params.world_width; j++){
+				worldMatrix[i][j] = " ";
+			}
+		}
+		for(Critter C: population){
+			worldMatrix[C.x_coord][C.y_coord] = C.toString();
+		}
+	}
 	public static void displayWorld() {
-		String[][] worldMatrix = new String[Params.world_height + 2][Params.world_width + 2];
+		updateWorld();
+		String[][] displayMatrix = new String[Params.world_height + 2][Params.world_width + 2];
 		
 		for(int i = 0; i < Params.world_width + 2; i++){
 			if(i == 0){
-				worldMatrix[0][0] = "+";
-				worldMatrix[Params.world_height + 1][0] = "+";
+				displayMatrix[0][0] = "+";
+				displayMatrix[Params.world_height + 1][0] = "+";
 			}
 			else if(i == Params.world_width + 1){
-				worldMatrix[0][Params.world_width + 1] = "+";
-				worldMatrix[Params.world_height + 1][Params.world_width + 1] = "+";				
+				displayMatrix[0][Params.world_width + 1] = "+";
+				displayMatrix[Params.world_height + 1][Params.world_width + 1] = "+";				
 			}
 			else if(!(i == 0) && !(i == Params.world_width + 1)){
-				worldMatrix[0][i] = "-";
-				worldMatrix[Params.world_height + 1][i] = "-";
+				displayMatrix[0][i] = "-";
+				displayMatrix[Params.world_height + 1][i] = "-";
 			}
 		}
 		
 		
 		for(int i = 1; i < Params.world_height + 1; i++){
-			worldMatrix[i][0] = "|";
-			worldMatrix[i][Params.world_width + 1] = "|";
+			displayMatrix[i][0] = "|";
+			displayMatrix[i][Params.world_width + 1] = "|";
 		}
 		
 		for(int i = 1; i < Params.world_height + 1; i++){
 			for(int j = 1; j < Params.world_width + 1; j++){
-				worldMatrix[i][j] = " ";
+				displayMatrix[i][j] = " ";
 			}
 		}
-		
+		for(int i = 0; i < Params.world_height; i++){
+			for(int j = 0; j < Params.world_width; j++){
+				displayMatrix[i+1][j+1] = worldMatrix[i][j];
+			}
+		}
 		for(int i = 0; i < Params.world_height + 2; i++){
 			for(int j = 0; j < Params.world_width + 2; j++){
 				if(j == Params.world_width + 1)
-					System.out.println(worldMatrix[i][j]);
+					System.out.println(displayMatrix[i][j]);
 				else
-					System.out.print(worldMatrix[i][j]);
+					System.out.print(displayMatrix[i][j]);
 			}
 		}
-		for(Critter C : population){
-			if(C instanceof Algae || C instanceof Critter || C instanceof TestCritter){
-				worldMatrix[C.x_coord][C.y_coord] = C.toString();
-			}
-		}
-		
 	}
 }
