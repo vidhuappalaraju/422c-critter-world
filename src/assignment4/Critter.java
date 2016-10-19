@@ -22,6 +22,7 @@ import java.util.List;
 
 public abstract class Critter {
 	private static String myPackage;
+	private static  String [][]worldMatrix = new String[Params.world_height][Params.world_width];
 	private	static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> Moved = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
@@ -362,7 +363,7 @@ public abstract class Critter {
 		 * This method getBabies has to be modified by you if you are not using the babies
 		 * ArrayList that has been provided in the starter code.  In any case, it has to be
 		 * implemented for grading tests to work.  Babies should be added to the general population 
-		 * at either the beginning OR the end of every timestep.
+		 * at either the beginning OR the end of every time step.
 		 */
 		protected static List<Critter> getBabies() {
 			return babies;
@@ -440,51 +441,60 @@ public abstract class Critter {
 				population.remove(C);
 		}	
 		Moved.clear();
+		updateWorld();
 	}
-	
+	public static void updateWorld(){
+		for(int i = 0; i < Params.world_height; i++){
+			for (int j = 0; j < Params.world_width; j++){
+				worldMatrix[i][j] = " ";
+			}
+		}
+		for(Critter C: population){
+			worldMatrix[C.x_coord][C.y_coord] = C.toString();
+		}
+	}
 	public static void displayWorld() {
-		String[][] worldMatrix = new String[Params.world_height + 2][Params.world_width + 2];
+		updateWorld();
+		String[][] displayMatrix = new String[Params.world_height + 2][Params.world_width + 2];
 		
 		for(int i = 0; i < Params.world_width + 2; i++){
 			if(i == 0){
-				worldMatrix[0][0] = "+";
-				worldMatrix[Params.world_height + 1][0] = "+";
+				displayMatrix[0][0] = "+";
+				displayMatrix[Params.world_height + 1][0] = "+";
 			}
 			else if(i == Params.world_width + 1){
-				worldMatrix[0][Params.world_width + 1] = "+";
-				worldMatrix[Params.world_height + 1][Params.world_width + 1] = "+";				
+				displayMatrix[0][Params.world_width + 1] = "+";
+				displayMatrix[Params.world_height + 1][Params.world_width + 1] = "+";				
 			}
 			else if(!(i == 0) && !(i == Params.world_width + 1)){
-				worldMatrix[0][i] = "-";
-				worldMatrix[Params.world_height + 1][i] = "-";
+				displayMatrix[0][i] = "-";
+				displayMatrix[Params.world_height + 1][i] = "-";
 			}
 		}
 		
 		
 		for(int i = 1; i < Params.world_height + 1; i++){
-			worldMatrix[i][0] = "|";
-			worldMatrix[i][Params.world_width + 1] = "|";
+			displayMatrix[i][0] = "|";
+			displayMatrix[i][Params.world_width + 1] = "|";
 		}
 		
 		for(int i = 1; i < Params.world_height + 1; i++){
 			for(int j = 1; j < Params.world_width + 1; j++){
-				worldMatrix[i][j] = " ";
+				displayMatrix[i][j] = " ";
 			}
 		}
-		
+		for(int i = 0; i < Params.world_height; i++){
+			for(int j = 0; j < Params.world_width; j++){
+				displayMatrix[i+1][j+1] = worldMatrix[i][j];
+			}
+		}
 		for(int i = 0; i < Params.world_height + 2; i++){
 			for(int j = 0; j < Params.world_width + 2; j++){
 				if(j == Params.world_width + 1)
-					System.out.println(worldMatrix[i][j]);
+					System.out.println(displayMatrix[i][j]);
 				else
-					System.out.print(worldMatrix[i][j]);
+					System.out.print(displayMatrix[i][j]);
 			}
 		}
-		for(Critter C : population){
-			if(C instanceof Algae || C instanceof Critter || C instanceof TestCritter){
-				worldMatrix[C.x_coord][C.y_coord] = C.toString();
-			}
-		}
-		
 	}
 }
