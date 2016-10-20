@@ -42,7 +42,7 @@ public abstract class Critter {
 	 * @param new_seed the new seed to set the random number generator to
 	 */
 	public static void setSeed(long new_seed) {
-		rand = new java.util.Random(new_seed);
+		rand = new java.util.Random(new_seed);														//setting new random number generator
 	}
 	
 	
@@ -62,15 +62,15 @@ public abstract class Critter {
 	 * @param direction the direction the critter should move to
 	 */
 	protected final void walk(int direction) {
-		this.energy -= Params.walk_energy_cost;
-		boolean move = Moved.contains(this);
+		this.energy -= Params.walk_energy_cost;														//deducts walk energy regardless of walking
+		boolean move = Moved.contains(this);														//checks if critter has moved
 		int oldX = this.x_coord;
 		int oldY = this.y_coord;
 		if(!move){
-			switch(direction){
+			switch(direction){																		//walk in the desired direction
 				case 0:
 					x_coord++;
-					if(x_coord >= Params.world_width){
+					if(x_coord >= Params.world_width){												//consider if the critter goes to other side of the grid, checks for all 8 directions
 						x_coord -= Params.world_width;
 					}
 					break;
@@ -133,10 +133,10 @@ public abstract class Critter {
 					}
 					break;
 			}	
-			Moved.add(this);
-			if(AllMove){
+			Moved.add(this);																		//add to array of moved critters
+			if(AllMove){																			//check if the moving period of the worldtimestep has happened
 				for(Critter C: population){
-					if(!(population.indexOf(this) == population.indexOf(C)) && this.x_coord == C.x_coord && this.y_coord == C.y_coord && C.energy > 0){
+					if(!(population.indexOf(this) == population.indexOf(C)) && this.x_coord == C.x_coord && this.y_coord == C.y_coord && C.energy > 0){	//don't allow a critter to enter a living critters spot
 						this.x_coord = oldX;
 						this.y_coord = oldY;
 						break;
@@ -150,15 +150,15 @@ public abstract class Critter {
 	 * @param direction the direction the critter should move to
 	 */
 	protected final void run(int direction) {
-		energy -= Params.run_energy_cost;
-		boolean move = Moved.contains(this);
+		energy -= Params.run_energy_cost;															//deducts walk energy regardless of walking
+		boolean move = Moved.contains(this);														//checks if critter has moved
 		int oldX = this.x_coord;
 		int oldY = this.y_coord;
 		if(!move){
-			switch(direction){
+			switch(direction){																		//walk in the desired direction
 				case 0:
 					x_coord+=2;
-					if(x_coord >= Params.world_width){
+					if(x_coord >= Params.world_width){												//consider if the critter goes to other side of the grid, checks for all 8 directions
 						x_coord -= Params.world_width;
 					}
 					break;
@@ -221,10 +221,10 @@ public abstract class Critter {
 					}
 					break;
 			}
-			Moved.add(this);
-			if(AllMove){
+			Moved.add(this);																		//add to array of moved critters
+			if(AllMove){																			//check if the moving period of the worldtimestep has happened
 				for(Critter C: population){
-					if(!(population.indexOf(this) == population.indexOf(C)) && this.x_coord == C.x_coord && this.y_coord == C.y_coord && C.energy > 0){
+					if(!(population.indexOf(this) == population.indexOf(C)) && this.x_coord == C.x_coord && this.y_coord == C.y_coord && C.energy > 0){ //don't allow a critter to enter a living critters spot
 						this.x_coord = oldX;
 						this.y_coord = oldY;
 						break;
@@ -240,17 +240,17 @@ public abstract class Critter {
 	 */
 	protected final void reproduce(Critter offspring, int direction) {
 		
-		if(energy >= Params.min_reproduce_energy){
-			offspring.energy = this.energy/2;
-			if(this.energy%2 == 1)
+		if(energy >= Params.min_reproduce_energy){													//check if critter has enough energy to reproduce
+			offspring.energy = this.energy/2;														//give offspring half of parent's energy rounded down
+			if(this.energy%2 == 1)																	//cut parent's energy in half rounded up
 				this.energy = this.energy/2 + 1;
 			if(this.energy%2 == 0)
 				this.energy = this.energy/2;
-			offspring.x_coord = this.x_coord;
+			offspring.x_coord = this.x_coord;														//set offspring to parent location
 			offspring.y_coord = this.y_coord;
-			offspring.walk(direction);
-			offspring.energy += Params.walk_energy_cost;
-			babies.add(offspring);
+			offspring.walk(direction);																//move offspring
+			offspring.energy += Params.walk_energy_cost;											//restore energy to offspring- it was technically born there
+			babies.add(offspring);																	//add offspring to babies collection
 		}
 		
 		else
@@ -274,15 +274,15 @@ public abstract class Critter {
 		Critter C;
 		try{
 			Class<?> Crit = Class.forName(Critter.myPackage + "." + critter_class_name);
-			C = (Critter)(Crit.newInstance());
+			C = (Critter)(Crit.newInstance());																			//make a new instance of the subclass
 		}
 		catch(Exception e){
-			throw new InvalidCritterException(critter_class_name);
+			throw new InvalidCritterException(critter_class_name);														//throw exception if string is not a class name
 		}
 		C.x_coord = Critter.getRandomInt(Params.world_width);
 		C.y_coord = Critter.getRandomInt(Params.world_height);
 		C.energy = Params.start_energy;
-		population.add(C);
+		population.add(C);																								//put new critter in population
 	}
 	
 	/**
@@ -296,16 +296,16 @@ public abstract class Critter {
         Class<?> critter, critterclass;
         try{
             critterclass = Class.forName(myPackage + ".Critter");
-            critter = Class.forName(myPackage + "." + critter_class_name);
+            critter = Class.forName(myPackage + "." + critter_class_name);												
             if(!critterclass.isAssignableFrom(critter)){
-                throw new InvalidCritterException(critter_class_name);
+                throw new InvalidCritterException(critter_class_name);												//throw exception if not a class name
             }
         }catch(ClassNotFoundException e){
             throw new InvalidCritterException(critter_class_name);
         }
         for(int i = 0; i < population.size(); i++){
             if(critter.isInstance(population.get(i))){
-                result.add(population.get(i));
+                result.add(population.get(i));																		//create list of critters in population of that subclass
             }
         }
         return result;
@@ -419,14 +419,14 @@ public abstract class Critter {
 						Afight = A.fight(B.toString());
 						Bfight = B.fight(A.toString());
 					}
-					if(A.x_coord == B.x_coord && A.y_coord == B.y_coord && A.energy > 0 && B.energy > 0){
+					if(A.x_coord == B.x_coord && A.y_coord == B.y_coord && A.energy > 0 && B.energy > 0){				//fight if still in same position
 						int Aroll = 0;
 						int Broll = 0;
 						if(Afight)
-							Aroll = Critter.getRandomInt(A.energy);
+							Aroll = Critter.getRandomInt(A.energy);														//determine critter rolls
 						if(Bfight)
 							Broll = Critter.getRandomInt(B.energy);
-						if(Aroll >= Broll){
+						if(Aroll >= Broll){																				//give winner half energy
 							A.energy += B.energy/2;
 							B.energy = 0;
 						}
@@ -438,18 +438,18 @@ public abstract class Critter {
 				}
 			}
 		}
-		for(Critter C: population){															//deduct rest energy cost
+		for(Critter C: population){																						//deduct rest energy cost
 			C.energy-= Params.rest_energy_cost;
 		}
 		
-		for(int i = 0; i < population.size(); i++){															//kill off whoever died from that
+		for(int i = 0; i < population.size(); i++){																		//kill off whoever died from that
 			Critter C = population.get(i);
 			if(C.getEnergy() <= 0){
 				population.remove(i);
 				i--;
 			}
 		}
-		for(int i = 0; i < Params.refresh_algae_count; i++){								//generate algae
+		for(int i = 0; i < Params.refresh_algae_count; i++){															//generate algae
 			try{
 			Critter.makeCritter("Algae");
 			}
@@ -457,19 +457,19 @@ public abstract class Critter {
 				e.toString();
 			}
 		}
-		for(Critter B: babies){																//add in babies from reproduction
+		for(Critter B: babies){																							//add in babies from reproduction
 			population.add(B);	
 		}
-		babies.clear();																		//empty babies list
-		for(int i = 0; i < population.size(); i++){															//kill off whoever died from that
+		babies.clear();																									//empty babies list
+		for(int i = 0; i < population.size(); i++){																		//kill off whoever died from that
 			Critter C = population.get(i);
 			if(C.getEnergy() <= 0){
 				population.remove(i);
 				i--;
 			}
 		}	
-		Moved.clear();
-		updateWorld();
+		Moved.clear();																									//empty clear list
+		updateWorld();																									//update world
 	}
 	/**
 	 * updates worldMatrix array to the current state of the world
@@ -477,21 +477,21 @@ public abstract class Critter {
 	public static void updateWorld(){
 		for(int i = 0; i < Params.world_height; i++){
 			for (int j = 0; j < Params.world_width; j++){
-				worldMatrix[i][j] = " ";
+				worldMatrix[i][j] = " ";																				//reset world to blank spaces
 			}
 		}
 		for(Critter C: population){
-			worldMatrix[C.x_coord][C.y_coord] = C.toString();
+			worldMatrix[C.x_coord][C.y_coord] = C.toString();															//put critter tostrings wherever they are
 		}
 	}
 	/**
 	 * displays the world in ASCII format
 	 */
 	public static void displayWorld() {
-		updateWorld();
+		updateWorld();																									//make sure world is updated
 		String[][] displayMatrix = new String[Params.world_height + 2][Params.world_width + 2];
 		
-		for(int i = 0; i < Params.world_width + 2; i++){
+		for(int i = 0; i < Params.world_width + 2; i++){																//make the frame
 			if(i == 0){
 				displayMatrix[0][0] = "+";
 				displayMatrix[Params.world_height + 1][0] = "+";
@@ -516,12 +516,12 @@ public abstract class Critter {
 				displayMatrix[i][j] = " ";
 			}
 		}
-		for(int i = 0; i < Params.world_height; i++){
+		for(int i = 0; i < Params.world_height; i++){																//put critters in their spaces
 			for(int j = 0; j < Params.world_width; j++){
 				displayMatrix[i+1][j+1] = worldMatrix[i][j];
 			}
 		}
-		for(int i = 0; i < Params.world_height + 2; i++){
+		for(int i = 0; i < Params.world_height + 2; i++){															//print world
 			for(int j = 0; j < Params.world_width + 2; j++){
 				if(j == Params.world_width + 1)
 					System.out.println(displayMatrix[i][j]);
