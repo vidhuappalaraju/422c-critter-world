@@ -74,7 +74,9 @@ public class Main {
         
         
         /* Write your code below. */
-        while(kb.hasNextLine()){
+        boolean flag = true;
+        while(flag){
+        	System.out.print("critters>");
         	 String line = kb.nextLine();
         	if(line.trim().length() == 0){
         		continue;
@@ -86,6 +88,7 @@ public class Main {
         	case "quit":
         		if(word.length > 1)
         			throw new Exception();
+        		flag = false;
         		break;
         	case "show":
         		if(word.length == 1)
@@ -111,14 +114,13 @@ public class Main {
         		else{
         			throw new Exception();
         		}
-        		break;
+
+            	break;
         	case "seed":
         		if(word.length == 1){
         			Critter.setSeed(Integer.parseInt(word[1]));
         		}
-        		else if(word.length > 2){
-        			throw new NumberFormatException();
-        		}
+        		
         		else{
         			
         			throw new Exception();
@@ -152,15 +154,18 @@ public class Main {
         		else{
         			throw new Exception();
         		}
+        		break;
         	default:
-        		System.out.println("error processing: " + line);
+        		System.out.println("invalid command: " + line);
         	}
         }
         catch(NumberFormatException e){
         	System.out.println("error processing: " + line);
         }
         catch(Exception e){
-        	System.out.println("invalid command: " + line);
+        	
+        	System.out.println("error processing: " + line);
+        
         }
         
        }

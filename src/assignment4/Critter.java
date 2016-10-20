@@ -1,11 +1,11 @@
 /* CRITTERS Critter.java
  * EE422C Project 4 submission by
  * Replace <...> with your actual data.
- * <Student1 Name>
- * <Student1 EID>
+ * Devin Amatya
+ * dga383
  * <Student1 5-digit Unique No.>
- * <Student2 Name>
- * <Student2 EID>
+ * Vidhu Appalaraju
+ * vsa267
  * <Student2 5-digit Unique No.>
  * Slip days used: <0>
  * Fall 2016
@@ -37,13 +37,19 @@ public abstract class Critter {
 	public static int getRandomInt(int max) {
 		return rand.nextInt(max);
 	}
-	
+	/**
+	 * Sets the random number generator seed
+	 * @param new_seed the new seed to set the random number generator to
+	 */
 	public static void setSeed(long new_seed) {
 		rand = new java.util.Random(new_seed);
 	}
 	
 	
 	/* a one-character long string that visually depicts your critter in the ASCII interface */
+	/**
+	 * Returns a visual depiction of our critter in the ASCII interface, subclasses should override this method
+	 */
 	public String toString() { return ""; }
 	
 	private int energy = 0;
@@ -51,6 +57,10 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 	
+	/**
+	 * moves critter 1 space in the direction specified. Will not move to location if trying to run from a fight and the space is occupied, or it has already moved prior
+	 * @param direction the direction the critter should move to
+	 */
 	protected final void walk(int direction) {
 		this.energy -= Params.walk_energy_cost;
 		boolean move = Moved.contains(this);
@@ -135,7 +145,10 @@ public abstract class Critter {
 			}
 		}
 	}
-	
+	/**
+	 * moves critter 2 spaces in the direction specified. Will not move to location if trying to run from a fight and the space is occupied, or it has already moved prior
+	 * @param direction the direction the critter should move to
+	 */
 	protected final void run(int direction) {
 		energy -= Params.run_energy_cost;
 		boolean move = Moved.contains(this);
@@ -220,7 +233,11 @@ public abstract class Critter {
 			}
 		}
 	}
-	
+	/**
+	 * adds a new child critter of a parent critter, gives it half their energy and moves it an adjacent space from the parent, and then adds it to the babies collection
+	 * @param offspring the child getting the energy from the parent
+	 * @param direction the direction the child will go to after reproduction
+	 */
 	protected final void reproduce(Critter offspring, int direction) {
 		
 		if(energy >= Params.min_reproduce_energy){
@@ -250,8 +267,8 @@ public abstract class Critter {
 	 * (Java weirdness: Exception throwing does not work properly if the parameter has lower-case instead of
 	 * upper. For example, if craig is supplied instead of Craig, an error is thrown instead of
 	 * an Exception.)
-	 * @param critter_class_name
-	 * @throws InvalidCritterException
+	 * @param critter_class_name the name of the critter subclass
+	 * @throws InvalidCritterException the exception to throw if the name is invalid
 	 */
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
 		Critter C;
@@ -377,16 +394,21 @@ public abstract class Critter {
 		population.clear();
 	}
 	
-	
+	/**
+	 * Performs the entire world step- deals with movement, encounters, and reproduction
+	 */
 	public static void worldTimeStep() {	
 		AllMove = false;
 		for(Critter C : population){														//initiate all doTimeStep functions
 			C.doTimeStep();
 		}
 		AllMove = true;
-		for(Critter C: population){															//kill off whoever died from that
-			if(C.getEnergy() <= 0)
-				population.remove(C);
+		for(int i = 0; i < population.size(); i++){															//kill off whoever died from that
+			Critter C = population.get(i);
+			if(C.getEnergy() <= 0){
+				population.remove(i);
+				i--;
+			}
 		}
 		for(Critter A : population){														//resolve fights UNFINISHED
 			for(Critter B : population){
@@ -420,9 +442,12 @@ public abstract class Critter {
 			C.energy-= Params.rest_energy_cost;
 		}
 		
-		for(Critter C: population){															//kill off whoever died from that
-			if(C.getEnergy() <= 0)
-				population.remove(C);
+		for(int i = 0; i < population.size(); i++){															//kill off whoever died from that
+			Critter C = population.get(i);
+			if(C.getEnergy() <= 0){
+				population.remove(i);
+				i--;
+			}
 		}
 		for(int i = 0; i < Params.refresh_algae_count; i++){								//generate algae
 			try{
@@ -436,13 +461,19 @@ public abstract class Critter {
 			population.add(B);	
 		}
 		babies.clear();																		//empty babies list
-		for(Critter C: population){															//kill off any remaining critters that may have been overlooKed
-			if(C.getEnergy() <= 0)
-				population.remove(C);
+		for(int i = 0; i < population.size(); i++){															//kill off whoever died from that
+			Critter C = population.get(i);
+			if(C.getEnergy() <= 0){
+				population.remove(i);
+				i--;
+			}
 		}	
 		Moved.clear();
 		updateWorld();
 	}
+	/**
+	 * updates worldMatrix array to the current state of the world
+	 */
 	public static void updateWorld(){
 		for(int i = 0; i < Params.world_height; i++){
 			for (int j = 0; j < Params.world_width; j++){
@@ -453,6 +484,9 @@ public abstract class Critter {
 			worldMatrix[C.x_coord][C.y_coord] = C.toString();
 		}
 	}
+	/**
+	 * displays the world in ASCII format
+	 */
 	public static void displayWorld() {
 		updateWorld();
 		String[][] displayMatrix = new String[Params.world_height + 2][Params.world_width + 2];
@@ -471,7 +505,6 @@ public abstract class Critter {
 				displayMatrix[Params.world_height + 1][i] = "-";
 			}
 		}
-		
 		
 		for(int i = 1; i < Params.world_height + 1; i++){
 			displayMatrix[i][0] = "|";
