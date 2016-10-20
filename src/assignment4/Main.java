@@ -74,19 +74,18 @@ public class Main {
         
         
         /* Write your code below. */
-        while(kb.hasNext()){
+        while(kb.hasNextLine()){
         	 String line = kb.nextLine();
-        	
+        	if(line.trim().length() == 0){
+        		continue;
+        	}
         	
         	String[] word = line.split("\\s+");
         try{
         	switch(word[0]){
         	case "quit":
-        		if(word.length == 1)
-        		System.exit(0);
-        		else{
+        		if(word.length > 1)
         			throw new Exception();
-        		}
         		break;
         	case "show":
         		if(word.length == 1)
@@ -117,7 +116,11 @@ public class Main {
         		if(word.length == 1){
         			Critter.setSeed(Integer.parseInt(word[1]));
         		}
+        		else if(word.length > 2){
+        			throw new NumberFormatException();
+        		}
         		else{
+        			
         			throw new Exception();
         		}
         		break;
@@ -153,15 +156,19 @@ public class Main {
         		System.out.println("error processing: " + line);
         	}
         }
+        catch(NumberFormatException e){
+        	System.out.println("error processing: " + line);
+        }
         catch(Exception e){
         	System.out.println("invalid command: " + line);
         }
+        
        }
        
-        System.out.println("GLHF");
+      //  System.out.println("GLHF");
         
         /* Write your code above */
-        System.out.flush();
+     //   System.out.flush();
 
     }
 }
