@@ -15,7 +15,7 @@ public class Critter4 extends Critter{
 		dir = Critter.getRandomInt(8);
 	}
 	public boolean fight(String not_used) { 
-		return dir > 2; 
+		return dir > 6;                 //only if the critter moves down right diagonally, it will want to fight
 	}
 	@Override
 	public void doTimeStep() {
@@ -28,8 +28,8 @@ public class Critter4 extends Critter{
 			run(dir);
 		}
 		if(dir > 0){
-			
-			Critter4 bb = new Critter4();
+                                            //if the direction is is not moving to the right, then we create
+			Critter4 bb = new Critter4();       //a new critter. The Critter reproduces
 			reproduce(bb, dir);
 		}
 		

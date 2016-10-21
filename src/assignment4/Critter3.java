@@ -17,7 +17,7 @@ public class Critter3 extends Critter{
 	}
 	
 	public boolean fight(String not_used) { 
-		return dir > 2; 
+		return dir > 2;                     //This Critter will fight if its direction is greater than 2.
 	}
 	
 	@Override
@@ -28,9 +28,9 @@ public class Critter3 extends Critter{
 		walk(dir);
 		
 		if(dir > 0){
-			
-			Critter3 bb = new Critter3();
-			reproduce(bb, dir);
+            
+			Critter3 bb = new Critter3();           //if the critter goes in any direction other than right,
+			reproduce(bb, dir);                      //then it will reproduce. (0 = Critter moving to the right)
 		}
 		
 		/* pick a new direction based on our genes */

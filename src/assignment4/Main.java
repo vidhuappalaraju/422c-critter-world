@@ -1,12 +1,12 @@
 /* CRITTERS Main.java
  * EE422C Project 4 submission by
  * Replace <...> with your actual data.
- * <Student1 Name>
- * <Student1 EID>
- * <Student1 5-digit Unique No.>
- * <Student2 Name>
- * <Student2 EID>
- * <Student2 5-digit Unique No.>
+ * Devin Amatya
+ * dga383
+ * 16455
+ * Vidhu Appalaraju
+ * vsa267
+ * 16465
  * Slip days used: <0>
  * Fall 2016
  */
@@ -75,34 +75,34 @@ public class Main {
         
         /* Write your code below. */
         while(kb.hasNextLine()){
-        	 String line = kb.nextLine();
-        	if(line.trim().length() == 0){
-        		continue;
+        	 String line = kb.nextLine();        //reads the line
+        	if(line.trim().length() == 0){      //i think we might have to delete this because nothing
+        		continue;                       //is an invalid command
         	}
         	
-        	String[] word = line.split("\\s+");
+        	String[] word = line.split("\\s+");     //removes the whitespaces in the line
         try{
-        	switch(word[0]){
-        	case "quit":
+        	switch(word[0]){                        //we take the first word of the line and do different things
+        	case "quit":                            //according to the first word
         		if(word.length > 1)
-        			throw new Exception();
-        		break;
+        			throw new Exception();          //if the first word is quit, we break out of the loop and the
+        		break;                              //program ends
         	case "show":
-        		if(word.length == 1)
-        		 Critter.displayWorld();
-        		else{
+        		if(word.length == 1)                //if the first word is show, we display the Critter world
+        		 Critter.displayWorld();            //if there is anything other than show, we will have an invalid
+        		else{                               //command
         			throw new Exception();
         		}
         		 break;
         	case "step":
-        		if(word.length == 1){
-        			Critter.worldTimeStep();
+        		if(word.length == 1){               //if the first word is step and not followed by any numbers,
+        			Critter.worldTimeStep();           //we perform the worldTimeStep method once
         			
         		}
         		else if(word.length == 2){
         			int step = Integer.parseInt(word[1]);
-        			if(step <= 0){
-        				throw new Exception();
+        			if(step <= 0){                  //if there is a number after step that's greater than 0,
+        				throw new Exception();      //we perform the worldTimeStep as many times the number is
         			}
         			for(int j = step; j > 0; j--){
             			Critter.worldTimeStep();
@@ -113,8 +113,8 @@ public class Main {
         		}
         		break;
         	case "seed":
-        		if(word.length == 1){
-        			Critter.setSeed(Integer.parseInt(word[1]));
+        		if(word.length == 1){               //if the first word is seed, we set the seed according to the
+        			Critter.setSeed(Integer.parseInt(word[1]));     //number that seed is followed by
         		}
         		else if(word.length > 2){
         			throw new NumberFormatException();
@@ -124,19 +124,19 @@ public class Main {
         			throw new Exception();
         		}
         		break;
-        	case "make":
+        	case "make":                                //if the first word is make then we need to make a critter
         		if(word.length == 2){
-        			String class_name = word[1];
-        			Critter.makeCritter(class_name);
+        			String class_name = word[1];        //the word make is followed by the class name
+        			Critter.makeCritter(class_name);        //we make the Critter of the class name
         		}
-        		else if(word.length == 3){
-        			String class_name = word[1];
-        			int count = Integer.parseInt(word[2]);
+        		else if(word.length == 3){              //if there is a number after the class name, then we
+        			String class_name = word[1];        //make the Critters of the class name equal the specified
+        			int count = Integer.parseInt(word[2]);      //number
         			if(count == 0){
         				throw new Exception();
         			}
         			for(int i = count; i > 0; i--){
-        				Critter.makeCritter(class_name);
+        				Critter.makeCritter(class_name);  //for loop to make the specified number of critters
         			}
         		}
         		else{
@@ -145,22 +145,22 @@ public class Main {
         		break;
         	case "stats":
         		if(word.length == 2){
-        			Class<?> critters = Class.forName(myPackage + "." + word[1]);
-        			Method meth = critters.getMethod("runStats", List.class);
-        			meth.invoke(null, Critter.getInstances(word[1]));
-        		}
+        			Class<?> critters = Class.forName(myPackage + "." + word[1]);//retrieves the class from the
+        			Method meth = critters.getMethod("runStats", List.class);    //string. this gets a method
+        			meth.invoke(null, Critter.getInstances(word[1])); //called runStats with the paramater as
+        		}                                                      //a List
         		else{
-        			throw new Exception();
+        			throw new Exception();              //if stats has a word after it,then it's an invalid command
         		}
         	default:
-        		System.out.println("error processing: " + line);
-        	}
+        		System.out.println("error processing: " + line);   //if the first word is not any of the cases
+        	}                                                       //then it's an error processing
         }
         catch(NumberFormatException e){
         	System.out.println("error processing: " + line);
         }
         catch(Exception e){
-        	System.out.println("invalid command: " + line);
+        	System.out.println("invalid command: " + line); //for any exceptions caught, it's an invalid command
         }
         
        }
