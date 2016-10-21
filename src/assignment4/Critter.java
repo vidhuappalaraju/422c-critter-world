@@ -290,6 +290,7 @@ public abstract class Critter {
 	 * @param critter_class_name What kind of Critter is to be listed.  Unqualified class name.
 	 * @return List of Critters.
 	 * @throws InvalidCritterException
+	 * 	thrown when critter is invalid
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
 		List<Critter> result = new java.util.ArrayList<Critter>();
