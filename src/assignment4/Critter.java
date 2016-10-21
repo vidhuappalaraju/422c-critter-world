@@ -42,7 +42,7 @@ public abstract class Critter {
 	 * @param new_seed the new seed to set the random number generator to
 	 */
 	public static void setSeed(long new_seed) {
-		rand = new java.util.Random(new_seed);														//setting new random number generator
+		rand = new java.util.Random(new_seed);																				//setting new random number generator
 	}
 	
 	
@@ -62,15 +62,15 @@ public abstract class Critter {
 	 * @param direction the direction the critter should move to
 	 */
 	protected final void walk(int direction) {
-		this.energy -= Params.walk_energy_cost;														//deducts walk energy regardless of walking
-		boolean move = Moved.contains(this);														//checks if critter has moved
+		this.energy -= Params.walk_energy_cost;																				//deducts walk energy regardless of walking
+		boolean move = Moved.contains(this);																				//checks if critter has moved
 		int oldX = this.x_coord;
 		int oldY = this.y_coord;
 		if(!move){
-			switch(direction){																		//walk in the desired direction
+			switch(direction){																								//walk in the desired direction
 				case 0:
 					x_coord++;
-					if(x_coord >= Params.world_width){												//consider if the critter goes to other side of the grid, checks for all 8 directions
+					if(x_coord >= Params.world_width){																		//consider if the critter goes to other side of the grid, checks for all 8 directions
 						x_coord -= Params.world_width;
 					}
 					break;
@@ -133,8 +133,8 @@ public abstract class Critter {
 					}
 					break;
 			}	
-			Moved.add(this);																		//add to array of moved critters
-			if(AllMove){																			//check if the moving period of the worldtimestep has happened
+			Moved.add(this);																							//add to array of moved critters
+			if(AllMove){																								//check if the moving period of the worldtimestep has happened
 				for(Critter C: population){
 					if(!(population.indexOf(this) == population.indexOf(C)) && this.x_coord == C.x_coord && this.y_coord == C.y_coord && C.energy > 0){	//don't allow a critter to enter a living critters spot
 						this.x_coord = oldX;
@@ -150,15 +150,15 @@ public abstract class Critter {
 	 * @param direction the direction the critter should move to
 	 */
 	protected final void run(int direction) {
-		energy -= Params.run_energy_cost;															//deducts walk energy regardless of walking
-		boolean move = Moved.contains(this);														//checks if critter has moved
+		energy -= Params.run_energy_cost;																				//deducts walk energy regardless of walking
+		boolean move = Moved.contains(this);																			//checks if critter has moved
 		int oldX = this.x_coord;
 		int oldY = this.y_coord;
 		if(!move){
-			switch(direction){																		//walk in the desired direction
+			switch(direction){																							//walk in the desired direction
 				case 0:
 					x_coord+=2;
-					if(x_coord >= Params.world_width){												//consider if the critter goes to other side of the grid, checks for all 8 directions
+					if(x_coord >= Params.world_width){																	//consider if the critter goes to other side of the grid, checks for all 8 directions
 						x_coord -= Params.world_width;
 					}
 					break;
@@ -221,8 +221,8 @@ public abstract class Critter {
 					}
 					break;
 			}
-			Moved.add(this);																		//add to array of moved critters
-			if(AllMove){																			//check if the moving period of the worldtimestep has happened
+			Moved.add(this);																							//add to array of moved critters
+			if(AllMove){																								//check if the moving period of the worldtimestep has happened
 				for(Critter C: population){
 					if(!(population.indexOf(this) == population.indexOf(C)) && this.x_coord == C.x_coord && this.y_coord == C.y_coord && C.energy > 0){ //don't allow a critter to enter a living critters spot
 						this.x_coord = oldX;
@@ -240,17 +240,17 @@ public abstract class Critter {
 	 */
 	protected final void reproduce(Critter offspring, int direction) {
 		
-		if(energy >= Params.min_reproduce_energy){													//check if critter has enough energy to reproduce
-			offspring.energy = this.energy/2;														//give offspring half of parent's energy rounded down
-			if(this.energy%2 == 1)																	//cut parent's energy in half rounded up
+		if(energy >= Params.min_reproduce_energy){																		//check if critter has enough energy to reproduce
+			offspring.energy = this.energy/2;																			//give offspring half of parent's energy rounded down
+			if(this.energy%2 == 1)																						//cut parent's energy in half rounded up
 				this.energy = this.energy/2 + 1;
 			if(this.energy%2 == 0)
 				this.energy = this.energy/2;
-			offspring.x_coord = this.x_coord;														//set offspring to parent location
+			offspring.x_coord = this.x_coord;																			//set offspring to parent location
 			offspring.y_coord = this.y_coord;
-			offspring.walk(direction);																//move offspring
-			offspring.energy += Params.walk_energy_cost;											//restore energy to offspring- it was technically born there
-			babies.add(offspring);																	//add offspring to babies collection
+			offspring.walk(direction);																					//move offspring
+			offspring.energy += Params.walk_energy_cost;																//restore energy to offspring- it was technically born there
+			babies.add(offspring);																						//add offspring to babies collection
 		}
 		
 		else
@@ -298,14 +298,14 @@ public abstract class Critter {
             critterclass = Class.forName(myPackage + ".Critter");
             critter = Class.forName(myPackage + "." + critter_class_name);												
             if(!critterclass.isAssignableFrom(critter)){
-                throw new InvalidCritterException(critter_class_name);												//throw exception if not a class name
+                throw new InvalidCritterException(critter_class_name);													//throw exception if not a class name
             }
         }catch(ClassNotFoundException e){
             throw new InvalidCritterException(critter_class_name);
         }
         for(int i = 0; i < population.size(); i++){
             if(critter.isInstance(population.get(i))){
-                result.add(population.get(i));																		//create list of critters in population of that subclass
+                result.add(population.get(i));																			//create list of critters in population of that subclass
             }
         }
         return result;
@@ -399,18 +399,18 @@ public abstract class Critter {
 	 */
 	public static void worldTimeStep() {	
 		AllMove = false;
-		for(Critter C : population){														//initiate all doTimeStep functions
+		for(Critter C : population){																					//initiate all doTimeStep functions
 			C.doTimeStep();
 		}
 		AllMove = true;
-		for(int i = 0; i < population.size(); i++){															//kill off whoever died from that
+		for(int i = 0; i < population.size(); i++){																		//kill off whoever died from that
 			Critter C = population.get(i);
 			if(C.getEnergy() <= 0){
 				population.remove(i);
 				i--;
 			}
 		}
-		for(Critter A : population){														//resolve fights UNFINISHED
+		for(Critter A : population){																					//resolve fights 
 			for(Critter B : population){
 				if(!(population.indexOf(A) == population.indexOf(B)) && A.energy > 0 && B.energy > 0){
 					boolean Afight = false;

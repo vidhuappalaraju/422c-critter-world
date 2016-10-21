@@ -10,13 +10,8 @@ import org.junit.BeforeClass;
 
 import org.junit.Test;
 
-<<<<<<< HEAD
-
-import assignment4.Critter.TestCritter;
-=======
 import assignment4.Critter.TestCritter;
 
->>>>>>> 38b0cf7f6c227a9274249f646e4b980c1aad19f3
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -88,11 +83,7 @@ public class A4SampleTest{
 			e.printStackTrace();
 		}
 		String text = scanner.useDelimiter("\\A").next().trim();
-<<<<<<< HEAD
-		String output =outContent.toString().replace("critter>","").trim();
-=======
 		String output =cleanString(outContent.toString());
->>>>>>> 38b0cf7f6c227a9274249f646e4b980c1aad19f3
 		scanner.close();
 		
 		assertEquals(text,output);
@@ -115,11 +106,7 @@ public class A4SampleTest{
 	
 		//Uncomment following codeblock to test with parameters
 		//Remove final keyword in Params.java
-<<<<<<< HEAD
-		/* 		
-=======
 				
->>>>>>> 38b0cf7f6c227a9274249f646e4b980c1aad19f3
 		Params.world_width = 20;
 		Params.world_width = 20;
 		Params.walk_energy_cost = 2;
@@ -130,11 +117,7 @@ public class A4SampleTest{
 		Params.photosynthesis_energy_amount = 1;
 		Params.start_energy = 100;
 		
-<<<<<<< HEAD
-		*/
-=======
 		
->>>>>>> 38b0cf7f6c227a9274249f646e4b980c1aad19f3
 		
 		String fileFolder = "error_processing";
 		String[] inputs = {TESTSRCDIR + fileFolder + "/input.txt" ,"test"};
@@ -150,20 +133,12 @@ public class A4SampleTest{
 			e.printStackTrace();
 		}
 		String text = scanner.useDelimiter("\\A").next().trim();
-<<<<<<< HEAD
-		String output = outContent.toString().replace("critter>","").trim();
-=======
 		String output = cleanString(outContent.toString());
->>>>>>> 38b0cf7f6c227a9274249f646e4b980c1aad19f3
 		scanner.close();
 		assertThat(text, containsString(output));
 		
 	}
 	
-<<<<<<< HEAD
-	
-}
-=======
 	/*
 	 * 10. showEmptyWorld
 	 */
@@ -265,4 +240,3 @@ public class A4SampleTest{
 	
 	
 }
->>>>>>> 38b0cf7f6c227a9274249f646e4b980c1aad19f3
